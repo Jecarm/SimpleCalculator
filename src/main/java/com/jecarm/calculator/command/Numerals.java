@@ -145,8 +145,8 @@ public class Numerals {
     }
   }
 
-  static class IntegerNumeral extends BaseNumeral<Integer> {
-    IntegerNumeral(Integer value) {
+  public static class IntegerNumeral extends BaseNumeral<Integer> {
+    public IntegerNumeral(Integer value) {
       super(value, Types.IntegerType.get());
     }
 
@@ -397,7 +397,7 @@ public class Numerals {
     }
   }
 
-  private static class BigIntegerNumeral extends BaseNumeral<BigInteger> {
+  public static class BigIntegerNumeral extends BaseNumeral<BigInteger> {
     public BigIntegerNumeral(BigInteger value) {
       super(value, Types.BigIntegerType.get());
     }
