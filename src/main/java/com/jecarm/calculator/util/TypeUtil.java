@@ -4,6 +4,7 @@ import com.jecarm.calculator.command.Numeral;
 import com.jecarm.calculator.command.Numerals;
 import com.jecarm.calculator.types.Type;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,6 +47,14 @@ public class TypeUtil {
       }
     }
     return Numeral;
+  }
+
+  public static Numeral inferNumeralTypeOfScience(String value) {
+    if (NumeralUtil.isNumeral(value)){
+      return Numerals.from(new BigDecimal(value));
+    } else {
+      throw new IllegalArgumentException("invalid parameter: " + value);
+    }
   }
 
   public static Type findWiderCommonType(Type left, Type right) {

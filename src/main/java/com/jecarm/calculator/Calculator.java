@@ -36,12 +36,12 @@ public class Calculator {
 
   public void compute() {
     for (String value : inputList) {
-      if (!execCommand(value)) break;
+      if (!evaluate(value)) break;
     }
     printer.printConsole("stack:" + dataStack.showString());
   }
 
-  private boolean execCommand(String value) {
+  public boolean evaluate(String value) {
     if (isCommand(value)) {
       Command cmd = parseCommand(value);
       if (dataStack.isEmpty() || !checkCommandValid(cmd)) {

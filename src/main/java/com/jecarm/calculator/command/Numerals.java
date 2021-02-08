@@ -6,6 +6,7 @@ import com.jecarm.calculator.types.Types;
 import com.jecarm.calculator.util.TypeUtil;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Objects;
@@ -18,7 +19,7 @@ public class Numerals {
    * Create a {@link Numeral} from an Object.
    *
    * @param value a value
-   * @param <T> Java type of value
+   * @param <T>   Java type of value
    * @return a Numeral for the given value
    */
   public static <T> Numeral<T> from(T value) {
@@ -35,6 +36,8 @@ public class Numerals {
       return (Numeral<T>) new Numerals.DoubleNumeral((Double) value);
     } else if (value instanceof CharSequence) {
       return (Numeral<T>) new Numerals.StringNumeral((CharSequence) value);
+    } else if (value instanceof BigInteger) {
+      return (Numeral<T>) new Numerals.BigIntegerNumeral((BigInteger) value);
     } else if (value instanceof BigDecimal) {
       return (Numeral<T>) new Numerals.DecimalNumeral((BigDecimal) value);
     }
@@ -142,7 +145,7 @@ public class Numerals {
     }
   }
 
-  static class IntegerNumeral extends BaseNumeral<Integer>{
+  static class IntegerNumeral extends BaseNumeral<Integer> {
     IntegerNumeral(Integer value) {
       super(value, Types.IntegerType.get());
     }
@@ -328,6 +331,7 @@ public class Numerals {
     public StringNumeral(CharSequence value) {
       super(value, null);
     }
+
     @Override
     public <T> Numeral<T> to(Type type) {
       switch (type.typeId()) {
@@ -372,12 +376,66 @@ public class Numerals {
 
     @Override
     public Numeral<BigDecimal> divide(Numeral<BigDecimal> right) {
-      return new DecimalNumeral(this.value().divide(right.value()));
+      BigDecimal result;
+      try{
+        result = this.value().divide(right.value());
+      } catch (ArithmeticException e) {
+        //TODO Has it a better implement intends of handling in exception?
+        //TODO Check Rounding mode is OK ???
+        result = this.value().divide(right.value(),
+            ((Types.DecimalType)this.dataType()).scale(), RoundingMode.HALF_UP);
+      }
+      return new DecimalNumeral(result);
     }
 
     @Override
     public Numeral sqrt() {
-      return new DecimalNumeral(this.value().sqrt(MathContext.DECIMAL64));
+      //TODO Check Rounding mode is OK ???
+      MathContext mathContext = new MathContext(((Types.DecimalType)this.dataType()).precision(),
+        RoundingMode.HALF_UP);
+      return new DecimalNumeral(this.value().sqrt(mathContext));
+    }
+  }
+
+  private static class BigIntegerNumeral extends BaseNumeral<BigInteger> {
+    public BigIntegerNumeral(BigInteger value) {
+      super(value, Types.BigIntegerType.get());
+    }
+
+    @Override
+    public <T> Numeral<T> to(Type type) {
+      switch (type.typeId()) {
+        case BIG_INTEGER:
+          // do not change decimal scale
+          return (Numeral<T>) this;
+        default:
+          return null;
+      }
+    }
+
+    @Override
+    public Numeral<BigInteger> plus(Numeral<BigInteger> right) {
+      return new BigIntegerNumeral(this.value().add(right.value()));
+    }
+
+    @Override
+    public Numeral<BigInteger> minus(Numeral<BigInteger> right) {
+      return new BigIntegerNumeral(this.value().subtract(right.value()));
+    }
+
+    @Override
+    public Numeral<BigInteger> multiply(Numeral<BigInteger> right) {
+      return new BigIntegerNumeral(this.value().multiply(right.value()));
+    }
+
+    @Override
+    public Numeral<BigInteger> divide(Numeral<BigInteger> right) {
+      return new BigIntegerNumeral(this.value().divide(right.value()));
+    }
+
+    @Override
+    public Numeral sqrt() {
+      return null;
     }
   }
 }

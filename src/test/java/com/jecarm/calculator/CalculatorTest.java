@@ -7,6 +7,7 @@ import com.jecarm.calculator.util.NumeralUtil;
 import com.jecarm.calculator.util.TypeUtil;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
 
@@ -18,8 +19,8 @@ public class CalculatorTest {
   }
 
   @Test
-  public void computeTest() {
-    Calculator calculator = new Calculator("5 2");
+  public void evaluateTest() {
+//    Mockito.when()
   }
 
   @Test

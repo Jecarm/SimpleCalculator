@@ -1,6 +1,7 @@
 package com.jecarm.calculator.types;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public interface Type {
   enum TypeID {
@@ -9,6 +10,7 @@ public interface Type {
     FLOAT(Float.class),
     DOUBLE(Double.class),
     DECIMAL(BigDecimal.class),
+    BIG_INTEGER(BigInteger.class),
     STRING(CharSequence.class);
 
     private final Class<?> javaClass;

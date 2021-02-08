@@ -22,12 +22,19 @@ public class Commands {
     public void execute() {
       right = dataStack.pop();
       left = dataStack.pop();
-
-      Numeral leftNumeral = TypeUtil.inferValueType(left);
-      Numeral rightNumeral = TypeUtil.inferValueType(right);
-      // check type
-      Type widestType = TypeUtil.findWiderCommonType(leftNumeral.dataType(), rightNumeral.dataType());
-      Numeral result = exec(leftNumeral.to(widestType), rightNumeral.to(widestType));
+      Numeral result;
+      //TODO load from configuration
+      if(isScience()){
+        Numeral leftNumeral = TypeUtil.inferNumeralTypeOfScience(left);
+        Numeral rightNumeral = TypeUtil.inferNumeralTypeOfScience(right);
+        result = exec(leftNumeral, rightNumeral);
+      } else {
+        Numeral leftNumeral = TypeUtil.inferValueType(left);
+        Numeral rightNumeral = TypeUtil.inferValueType(right);
+        // check type
+        Type widestType = TypeUtil.findWiderCommonType(leftNumeral.dataType(), rightNumeral.dataType());
+        result = exec(leftNumeral.to(widestType), rightNumeral.to(widestType));
+      }
       dataStack.push(result.value().toString());
     }
 
