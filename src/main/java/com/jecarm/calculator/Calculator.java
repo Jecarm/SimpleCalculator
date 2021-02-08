@@ -1,6 +1,5 @@
 package com.jecarm.calculator;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.jecarm.calculator.command.*;
 import com.jecarm.calculator.util.NumeralUtil;
@@ -13,23 +12,18 @@ import java.util.stream.Collectors;
 
 
 public class Calculator {
-  private final List<String> operators = ImmutableList.of("+", "-", "*", "/", "sqrt");
   private final List<String> commands = ImmutableList.of("+", "-", "*", "/", "sqrt", "undo", "clear");
 
   RpnStack<String> dataStack = new RpnStack<>();
   private List<String> inputList;
   private Printer printer = new Printer();
-  //  private OperatorParser opParser = new OperatorParser();
-  private CommandParser cmdParser = new CommandParser();
   private CommandManager manager = new CommandManager();
 
-  @VisibleForTesting
   public Calculator() {
 
   }
 
   public Calculator(String inputs) {
-    //todo 不能一次性解析除所有的数字和操作符  应该按照操作符为主
     parseInputs(inputs);
   }
 
@@ -48,15 +42,10 @@ public class Calculator {
   }
 
   private boolean execCommand(String value) {
-
-//    for (String value : inputList) {
-
     if (isCommand(value)) {
-      // 触发一次计算
       Command cmd = parseCommand(value);
       if (dataStack.isEmpty() || !checkCommandValid(cmd)) {
         printer.printConsole(String.format("operator %s insucient parameters", value));
-//          break;
         return false;
       }
       if (cmd instanceof Commands.Undo) {
@@ -71,7 +60,6 @@ public class Calculator {
       printer.printConsole(String.format("Invalid parameters: %s", value));
       return false;
     }
-//    }
     return true;
   }
 

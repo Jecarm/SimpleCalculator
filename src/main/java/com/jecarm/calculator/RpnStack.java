@@ -24,15 +24,10 @@ public class RpnStack<T> {
     return storage.removeFirst();
   }
 
-//  public T poll() {
-//    return storage.removeLast();
-//  }
-
   public void clear() {
     storage.clear();
   }
 
-  /** 栈是否为空 */
   public boolean isEmpty() {
     return storage.isEmpty();
   }
@@ -53,7 +48,6 @@ public class RpnStack<T> {
     return String.join(" ", reversedList);
   }
 
-  /** 打印栈元素 */
   public String toString() {
     return storage.toString();
   }

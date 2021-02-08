@@ -2,6 +2,7 @@ package com.jecarm.calculator.command;
 
 import com.jecarm.calculator.RpnStack;
 import com.jecarm.calculator.exception.OperationNotSupportException;
+import com.jecarm.calculator.types.Type;
 import com.jecarm.calculator.util.TypeUtil;
 
 public class Commands {
@@ -21,7 +22,12 @@ public class Commands {
     public void execute() {
       right = dataStack.pop();
       left = dataStack.pop();
-      Numeral result = exec(TypeUtil.inferValueType(left), TypeUtil.inferValueType(right));
+
+      Numeral leftNumeral = TypeUtil.inferValueType(left);
+      Numeral rightNumeral = TypeUtil.inferValueType(right);
+      // check type
+      Type widestType = TypeUtil.findWiderCommonType(leftNumeral.dataType(), rightNumeral.dataType());
+      Numeral result = exec(leftNumeral.to(widestType), rightNumeral.to(widestType));
       dataStack.push(result.value().toString());
     }
 

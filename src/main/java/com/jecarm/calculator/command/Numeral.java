@@ -7,12 +7,14 @@ public interface Numeral<T> {
   /**
    * @return The value wrapped by this Numeral
    */
-  public T value();
+  T value();
 
+  Type dataType();
   /**
    * Converts this Numeral to a Numeral of the given type.
+   *
    * @param type
-   * @param <X> The java type
+   * @param <X>  The java type
    * @return A new Numeral of given type
    */
   <X> Numeral<X> to(Type type);

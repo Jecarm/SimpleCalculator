@@ -6,6 +6,7 @@ import com.jecarm.calculator.types.Types;
 import com.jecarm.calculator.util.TypeUtil;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Objects;
 
@@ -44,15 +45,22 @@ public class Numerals {
 
   private abstract static class BaseNumeral<T> implements Numeral<T> {
     private final T value;
+    private final Type dataType;
 
-    BaseNumeral(T value) {
+    BaseNumeral(T value, Type dataType) {
       Preconditions.checkNotNull(value, "Numeral values cannot be null");
       this.value = value;
+      this.dataType = dataType;
     }
 
     @Override
     public T value() {
       return value;
+    }
+
+    @Override
+    public Type dataType() {
+      return dataType;
     }
 
     @Override
@@ -92,6 +100,11 @@ public class Numerals {
     }
 
     @Override
+    public Type dataType() {
+      throw new UnsupportedOperationException("Cannot get the type of AboveMax");
+    }
+
+    @Override
     public <X> Numeral<X> to(Type type) {
       throw new UnsupportedOperationException("Cannot change the type of AboveMax");
     }
@@ -114,6 +127,11 @@ public class Numerals {
     }
 
     @Override
+    public Type dataType() {
+      throw new UnsupportedOperationException("Cannot get the type of AboveMax");
+    }
+
+    @Override
     public <X> Numeral<X> to(Type type) {
       throw new UnsupportedOperationException("Cannot change the type of BelowMin");
     }
@@ -126,7 +144,7 @@ public class Numerals {
 
   static class IntegerNumeral extends BaseNumeral<Integer>{
     IntegerNumeral(Integer value) {
-      super(value);
+      super(value, Types.IntegerType.get());
     }
 
     @Override
@@ -175,7 +193,7 @@ public class Numerals {
 
   public static class LongNumeral extends BaseNumeral<Long> {
     public LongNumeral(Long value) {
-      super(value);
+      super(value, Types.LongType.get());
     }
 
     @Override
@@ -206,13 +224,33 @@ public class Numerals {
 
     @Override
     public Numeral plus(Numeral<Long> right) {
-      return null;
+      return new LongNumeral(this.value() + right.value());
+    }
+
+    @Override
+    public Numeral<Long> minus(Numeral<Long> right) {
+      return new LongNumeral(this.value() - right.value());
+    }
+
+    @Override
+    public Numeral<Long> multiply(Numeral<Long> right) {
+      return new LongNumeral(this.value() * right.value());
+    }
+
+    @Override
+    public Numeral<Long> divide(Numeral<Long> right) {
+      return new LongNumeral(this.value() / right.value());
+    }
+
+    @Override
+    public Numeral sqrt() {
+      return new DoubleNumeral(Math.sqrt(this.value().doubleValue()));
     }
   }
 
   public static class FloatNumeral extends BaseNumeral<Float> {
     public FloatNumeral(Float value) {
-      super(value);
+      super(value, Types.FloatType.get());
     }
 
     @Override
@@ -234,7 +272,7 @@ public class Numerals {
 
   public static class DoubleNumeral extends BaseNumeral<Double> {
     public DoubleNumeral(Double value) {
-      super(value);
+      super(value, Types.DoubleType.get());
     }
 
     @Override
@@ -259,11 +297,36 @@ public class Numerals {
           return null;
       }
     }
+
+    @Override
+    public Numeral<Double> plus(Numeral<Double> right) {
+      return new DoubleNumeral(this.value() + right.value());
+    }
+
+    @Override
+    public Numeral<Double> minus(Numeral<Double> right) {
+      return new DoubleNumeral(this.value() - right.value());
+    }
+
+    @Override
+    public Numeral<Double> multiply(Numeral<Double> right) {
+      return new DoubleNumeral(this.value() * right.value());
+    }
+
+    @Override
+    public Numeral<Double> divide(Numeral<Double> right) {
+      return new DoubleNumeral(this.value() / right.value());
+    }
+
+    @Override
+    public Numeral sqrt() {
+      return new DoubleNumeral(Math.sqrt(this.value().doubleValue()));
+    }
   }
 
   public static class StringNumeral extends BaseNumeral<CharSequence> {
     public StringNumeral(CharSequence value) {
-      super(value);
+      super(value, null);
     }
     @Override
     public <T> Numeral<T> to(Type type) {
@@ -278,7 +341,7 @@ public class Numerals {
 
   public static class DecimalNumeral extends BaseNumeral<BigDecimal> {
     public DecimalNumeral(BigDecimal value) {
-      super(value);
+      super(value, Types.DecimalType.of(15, 10));
     }
 
     @Override
@@ -290,6 +353,31 @@ public class Numerals {
         default:
           return null;
       }
+    }
+
+    @Override
+    public Numeral<BigDecimal> plus(Numeral<BigDecimal> right) {
+      return new DecimalNumeral(this.value().add(right.value()));
+    }
+
+    @Override
+    public Numeral<BigDecimal> minus(Numeral<BigDecimal> right) {
+      return new DecimalNumeral(this.value().subtract(right.value()));
+    }
+
+    @Override
+    public Numeral<BigDecimal> multiply(Numeral<BigDecimal> right) {
+      return new DecimalNumeral(this.value().multiply(right.value()));
+    }
+
+    @Override
+    public Numeral<BigDecimal> divide(Numeral<BigDecimal> right) {
+      return new DecimalNumeral(this.value().divide(right.value()));
+    }
+
+    @Override
+    public Numeral sqrt() {
+      return new DecimalNumeral(this.value().sqrt(MathContext.DECIMAL64));
     }
   }
 }

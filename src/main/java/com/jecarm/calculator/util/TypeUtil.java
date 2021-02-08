@@ -2,9 +2,7 @@ package com.jecarm.calculator.util;
 
 import com.jecarm.calculator.command.Numeral;
 import com.jecarm.calculator.command.Numerals;
-//import com.jecarm.calculator.expression.Numeral;
 import com.jecarm.calculator.types.Type;
-import com.jecarm.calculator.types.Types;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +48,7 @@ public class TypeUtil {
     return Numeral;
   }
 
-  public Type findWiderCommonType(Type left, Type right) {
+  public static Type findWiderCommonType(Type left, Type right) {
 
     if (left == right) {
       return left;
