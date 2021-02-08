@@ -58,7 +58,13 @@ public class Commands {
     @Override
     public void execute() {
       value = dataStack.pop();
-      Numeral result = exec(TypeUtil.inferValueType(value));
+      Numeral result;
+      //TODO 待优化
+      if(isScience()){
+        result = exec(TypeUtil.inferNumeralTypeOfScience(value));
+      } else {
+        result = exec(TypeUtil.inferValueType(value));
+      }
       dataStack.push(result.value().toString());
     }
 

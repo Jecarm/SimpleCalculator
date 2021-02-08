@@ -383,7 +383,7 @@ public class Numerals {
         //TODO Has it a better implement intends of handling in exception?
         //TODO Check Rounding mode is OK ???
         result = this.value().divide(right.value(),
-            ((Types.DecimalType)this.dataType()).scale(), RoundingMode.HALF_UP);
+            ((Types.DecimalType)this.dataType()).scale(), RoundingMode.FLOOR);
       }
       return new DecimalNumeral(result);
     }
@@ -391,9 +391,19 @@ public class Numerals {
     @Override
     public Numeral sqrt() {
       //TODO Check Rounding mode is OK ???
-      MathContext mathContext = new MathContext(((Types.DecimalType)this.dataType()).precision(),
-        RoundingMode.HALF_UP);
-      return new DecimalNumeral(this.value().sqrt(mathContext));
+
+      BigDecimal result;
+      try {
+        MathContext mathContext = new MathContext(((Types.DecimalType)this.dataType()).precision(),
+          RoundingMode.UNNECESSARY);
+        result = this.value().sqrt(mathContext);
+      } catch (ArithmeticException e) {
+        MathContext mathContext = new MathContext(((Types.DecimalType)this.dataType()).precision(),
+          RoundingMode.FLOOR);
+        result = this.value().sqrt(mathContext)
+          .setScale(((Types.DecimalType)this.dataType()).scale(), RoundingMode.FLOOR);
+      }
+      return new DecimalNumeral(result);
     }
   }
 

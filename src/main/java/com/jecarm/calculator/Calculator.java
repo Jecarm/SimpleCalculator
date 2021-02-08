@@ -1,5 +1,6 @@
 package com.jecarm.calculator;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.jecarm.calculator.command.*;
 import com.jecarm.calculator.util.NumeralUtil;
@@ -27,18 +28,20 @@ public class Calculator {
     parseInputs(inputs);
   }
 
-  public void parseInputs(String inputs) {
+  public Calculator parseInputs(String inputs) {
     this.inputList = Arrays.stream(inputs.split("\\s+"))
       .map(String::trim)
       .filter(s -> !s.isEmpty())
       .collect(Collectors.toList());
+    return this;
   }
 
-  public void compute() {
+  public Calculator compute() {
     for (String value : inputList) {
       if (!evaluate(value)) break;
     }
     printer.printConsole("stack:" + dataStack.showString());
+    return this;
   }
 
   public boolean evaluate(String value) {
@@ -93,6 +96,11 @@ public class Calculator {
       default:
         return null;
     }
+  }
+
+  @VisibleForTesting
+  public String showStackInfo() {
+    return dataStack.showString();
   }
 
   private boolean isCommand(String value) {

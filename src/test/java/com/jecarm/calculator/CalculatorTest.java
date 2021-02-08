@@ -7,7 +7,6 @@ import com.jecarm.calculator.util.NumeralUtil;
 import com.jecarm.calculator.util.TypeUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
 
@@ -19,8 +18,25 @@ public class CalculatorTest {
   }
 
   @Test
-  public void evaluateTest() {
-//    Mockito.when()
+  public void evaluateExample1Test() {
+    assertEquals("5 2", calculator.parseInputs("5 2").compute().showStackInfo());
+  }
+
+  @Test
+  public void evaluateExample2Test() {
+    //precision: 15, scale max: 10
+    //1.4142135623731
+    assertEquals("1.4142135623", calculator.parseInputs("2 sqrt").compute().showStackInfo());
+    assertEquals("", calculator.parseInputs("clear").compute().showStackInfo());
+    assertEquals("2", calculator.parseInputs("4 sqrt").compute().showStackInfo());
+
+  }
+
+  @Test
+  public void evaluateExample3Test() {
+    assertEquals("3", calculator.parseInputs("5 2 -").compute().showStackInfo());
+    assertEquals("0", calculator.parseInputs("3 -").compute().showStackInfo());
+    assertEquals("", calculator.parseInputs("clear").compute().showStackInfo());
   }
 
   @Test
