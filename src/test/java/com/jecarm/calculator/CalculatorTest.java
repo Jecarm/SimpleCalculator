@@ -19,24 +19,57 @@ public class CalculatorTest {
 
   @Test
   public void evaluateExample1Test() {
-    assertEquals("5 2", calculator.parseInputs("5 2").compute().showStackInfo());
+    assertEquals("stack:5 2", calculator.parseInputs("5 2").compute().getStackInfo());
   }
 
   @Test
   public void evaluateExample2Test() {
     //precision: 15, scale max: 10
     //1.4142135623731
-    assertEquals("1.4142135623", calculator.parseInputs("2 sqrt").compute().showStackInfo());
-    assertEquals("", calculator.parseInputs("clear").compute().showStackInfo());
-    assertEquals("2", calculator.parseInputs("4 sqrt").compute().showStackInfo());
+    assertEquals("stack:1.4142135623", calculator.parseInputs("2 sqrt").compute().getStackInfo());
+    assertEquals("stack:", calculator.parseInputs("clear").compute().getStackInfo());
+    assertEquals("stack:2", calculator.parseInputs("4 sqrt").compute().getStackInfo());
 
   }
 
   @Test
   public void evaluateExample3Test() {
-    assertEquals("3", calculator.parseInputs("5 2 -").compute().showStackInfo());
-    assertEquals("0", calculator.parseInputs("3 -").compute().showStackInfo());
-    assertEquals("", calculator.parseInputs("clear").compute().showStackInfo());
+    assertEquals("stack:3", calculator.parseInputs("5 2 -").compute().getStackInfo());
+    assertEquals("stack:0", calculator.parseInputs("3 -").compute().getStackInfo());
+    assertEquals("stack:", calculator.parseInputs("clear").compute().getStackInfo());
+  }
+
+  @Test
+  public void evaluateExample4Test() {
+    assertEquals("stack:5 4 3 2", calculator.parseInputs("5 4 3 2").compute().getStackInfo());
+    assertEquals("stack:20", calculator.parseInputs("undo undo *").compute().getStackInfo());
+    assertEquals("stack:100", calculator.parseInputs("5 *").compute().getStackInfo());
+    assertEquals("stack:20 5", calculator.parseInputs("undo").compute().getStackInfo());
+  }
+
+  @Test
+  public void evaluateExample5Test() {
+    assertEquals("stack:7 6", calculator.parseInputs("7 12 2 /").compute().getStackInfo());
+    assertEquals("stack:42", calculator.parseInputs("*").compute().getStackInfo());
+    assertEquals("stack:10.5", calculator.parseInputs("4 /").compute().getStackInfo());
+  }
+
+  @Test
+  public void evaluateExample6Test() {
+    assertEquals("stack:1 2 3 4 5", calculator.parseInputs("1 2 3 4 5").compute().getStackInfo());
+    assertEquals("stack:1 2 3 20", calculator.parseInputs("*").compute().getStackInfo());
+    assertEquals("stack:-1", calculator.parseInputs("clear 3 4 -").compute().getStackInfo());
+  }
+
+  @Test
+  public void evaluateExample7Test() {
+    assertEquals("stack:1 2 3 4 5", calculator.parseInputs("1 2 3 4 5").compute().getStackInfo());
+    assertEquals("stack:120", calculator.parseInputs("* * * *").compute().getStackInfo());
+  }
+
+  @Test
+  public void evaluateExample8Test() {
+    assertEquals("stack:11", calculator.parseInputs("1 2 3 * 5 + * * 6 5").compute().getStackInfo());
   }
 
   @Test

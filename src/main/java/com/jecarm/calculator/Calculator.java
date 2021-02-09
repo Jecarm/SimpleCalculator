@@ -40,7 +40,7 @@ public class Calculator {
     for (String value : inputList) {
       if (!evaluate(value)) break;
     }
-    printer.printConsole("stack:" + dataStack.showString());
+    printer.printConsole(getStackInfo());
     return this;
   }
 
@@ -98,8 +98,7 @@ public class Calculator {
     }
   }
 
-  @VisibleForTesting
-  public String showStackInfo() {
+  public String getStackInfo() {
     return dataStack.showString();
   }
 

@@ -45,7 +45,7 @@ public class RpnStack<T> {
     for (T element: storage) {
       reversedList.addFirst(element.toString());
     }
-    return String.join(" ", reversedList);
+    return "stack:" + String.join(" ", reversedList);
   }
 
   public String toString() {

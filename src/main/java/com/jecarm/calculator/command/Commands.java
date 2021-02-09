@@ -41,8 +41,8 @@ public class Commands {
     @Override
     public void undo() {
       dataStack.pop();
-      dataStack.push(right);
       dataStack.push(left);
+      dataStack.push(right);
     }
 
   }
