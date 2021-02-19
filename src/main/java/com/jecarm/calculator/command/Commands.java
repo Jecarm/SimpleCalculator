@@ -8,11 +8,11 @@ import com.jecarm.calculator.util.TypeUtil;
 public class Commands {
 
   public abstract static class BinaryCommand implements Command {
-    protected RpnStack<String> dataStack;
-    protected String left;
-    protected String right;
+    protected RpnStack<Numeral> dataStack;
+    protected Numeral left;
+    protected Numeral right;
 
-    public BinaryCommand(RpnStack<String> dataStack) {
+    public BinaryCommand(RpnStack<Numeral> dataStack) {
       this.dataStack = dataStack;
     }
 
@@ -25,17 +25,13 @@ public class Commands {
       Numeral result;
       //TODO load from configuration
       if(isScience()){
-        Numeral leftNumeral = TypeUtil.inferNumeralTypeOfScience(left);
-        Numeral rightNumeral = TypeUtil.inferNumeralTypeOfScience(right);
-        result = exec(leftNumeral, rightNumeral);
+        result = exec(left, right);
       } else {
-        Numeral leftNumeral = TypeUtil.inferValueType(left);
-        Numeral rightNumeral = TypeUtil.inferValueType(right);
         // check type
-        Type widestType = TypeUtil.findWiderCommonType(leftNumeral.dataType(), rightNumeral.dataType());
-        result = exec(leftNumeral.to(widestType), rightNumeral.to(widestType));
+        Type widestType = TypeUtil.findWiderCommonType(left.dataType(), right.dataType());
+        result = exec(left.to(widestType), right.to(widestType));
       }
-      dataStack.push(result.value().toString());
+      dataStack.push(result);
     }
 
     @Override
@@ -48,24 +44,18 @@ public class Commands {
   }
 
   public abstract static class UnaryCommand implements Command {
-    protected RpnStack<String> dataStack;
-    protected String value;
+    protected RpnStack<Numeral> dataStack;
+    protected Numeral value;
 
-    public UnaryCommand(RpnStack<String> dataStack) {
+    public UnaryCommand(RpnStack<Numeral> dataStack) {
       this.dataStack = dataStack;
     }
 
     @Override
     public void execute() {
       value = dataStack.pop();
-      Numeral result;
-      //TODO 待优化
-      if(isScience()){
-        result = exec(TypeUtil.inferNumeralTypeOfScience(value));
-      } else {
-        result = exec(TypeUtil.inferValueType(value));
-      }
-      dataStack.push(result.value().toString());
+      Numeral result = exec(value);
+      dataStack.push(result);
     }
 
     @Override
@@ -78,17 +68,17 @@ public class Commands {
 
   }
 
-  public abstract static class HelperCommand implements Command {
-    protected RpnStack<String> dataStack;
+  public abstract static class HelperCommand<T> implements Command {
+    protected RpnStack<T> dataStack;
 
-    public HelperCommand(RpnStack<String> dataStack) {
+    public HelperCommand(RpnStack<T> dataStack) {
       this.dataStack = dataStack;
     }
   }
 
   public static class AddCommand extends BinaryCommand {
 
-    public AddCommand(RpnStack<String> dataStack) {
+    public AddCommand(RpnStack<Numeral> dataStack) {
       super(dataStack);
     }
 
@@ -105,7 +95,7 @@ public class Commands {
 
   public static class Subtract extends BinaryCommand {
 
-    public Subtract(RpnStack<String> dataStack) {
+    public Subtract(RpnStack<Numeral> dataStack) {
       super(dataStack);
     }
 
@@ -122,7 +112,7 @@ public class Commands {
 
   public static class Multiply extends BinaryCommand {
 
-    public Multiply(RpnStack<String> dataStack) {
+    public Multiply(RpnStack<Numeral> dataStack) {
       super(dataStack);
     }
 
@@ -139,7 +129,7 @@ public class Commands {
 
   public static class Divide extends BinaryCommand {
 
-    public Divide(RpnStack<String> dataStack) {
+    public Divide(RpnStack<Numeral> dataStack) {
       super(dataStack);
     }
 
@@ -156,7 +146,7 @@ public class Commands {
 
   public static class Sqrt extends UnaryCommand {
 
-    public Sqrt(RpnStack<String> dataStack) {
+    public Sqrt(RpnStack<Numeral> dataStack) {
       super(dataStack);
     }
 
@@ -173,7 +163,7 @@ public class Commands {
 
   public static class Undo extends HelperCommand {
 
-    public Undo(RpnStack<String> dataStack) {
+    public Undo(RpnStack<Numeral> dataStack) {
       super(dataStack);
     }
 
@@ -200,7 +190,7 @@ public class Commands {
 
   public static class Clear extends HelperCommand {
 
-    public Clear(RpnStack<String> dataStack) {
+    public Clear(RpnStack<Numeral> dataStack) {
       super(dataStack);
     }
 

@@ -3,10 +3,10 @@ package com.jecarm.calculator.command;
 import com.jecarm.calculator.RpnStack;
 
 public class NumeralCommand implements Command {
-  protected RpnStack<String> dataStack;
-  protected String value;
+  protected RpnStack<Numeral> dataStack;
+  protected Numeral value;
 
-  public NumeralCommand(RpnStack<String> dataStack, String value) {
+  public NumeralCommand(RpnStack<Numeral> dataStack, Numeral value) {
     this.dataStack = dataStack;
     this.value = value;
   }

@@ -26,12 +26,12 @@ public class Types {
     throw new IllegalArgumentException("Cannot parse type string to number: " + typeString);
   }
 
-  public static abstract class NumericType implements Type {
+  public static abstract class BaseType implements Type {
 
     @Override
     public boolean equals(Object obj) {
       if (this == obj) return true;
-      if (obj instanceof NumericType) {
+      if (obj instanceof BaseType) {
         return this.toString() == obj.toString();
       }
       return false;
@@ -43,7 +43,7 @@ public class Types {
     }
   }
 
-  public static class IntegerType extends NumericType {
+  public static class IntegerType extends BaseType {
     private static final IntegerType INSTANCE = new IntegerType();
 
     private IntegerType() {
@@ -64,7 +64,7 @@ public class Types {
     }
   }
 
-  public static class LongType extends NumericType {
+  public static class LongType extends BaseType {
     private static final LongType INSTANCE = new LongType();
 
     private LongType() {
@@ -85,7 +85,7 @@ public class Types {
     }
   }
 
-  public static class FloatType extends NumericType {
+  public static class FloatType extends BaseType {
     private static final FloatType INSTANCE = new FloatType();
 
     private FloatType() {
@@ -106,7 +106,7 @@ public class Types {
     }
   }
 
-  public static class DoubleType extends NumericType {
+  public static class DoubleType extends BaseType {
     private static final DoubleType INSTANCE = new DoubleType();
 
     private DoubleType() {
@@ -127,7 +127,7 @@ public class Types {
     }
   }
 
-  public static class DecimalType extends NumericType {
+  public static class DecimalType extends BaseType {
     public static DecimalType of(int precision, int scale) {
       return new DecimalType(precision, scale);
     }
@@ -192,7 +192,7 @@ public class Types {
     }
   }
 
-  public static class BigIntegerType extends NumericType {
+  public static class BigIntegerType extends BaseType {
     private static final BigIntegerType INSTANCE = new BigIntegerType();
 
     private BigIntegerType() {
@@ -210,6 +210,27 @@ public class Types {
     @Override
     public String toString() {
       return "BigInteger";
+    }
+  }
+
+  public static class StringType extends BaseType {
+    private static final StringType INSTANCE = new StringType();
+
+    private StringType() {
+    }
+
+    public static StringType get() {
+      return INSTANCE;
+    }
+
+    @Override
+    public TypeID typeId() {
+      return TypeID.BIG_INTEGER;
+    }
+
+    @Override
+    public String toString() {
+      return "String";
     }
   }
 }

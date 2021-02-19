@@ -3,6 +3,8 @@ package com.jecarm.calculator;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.jecarm.calculator.command.*;
+import com.jecarm.calculator.common.CommonParser;
+import com.jecarm.calculator.common.Parser;
 import com.jecarm.calculator.util.NumeralUtil;
 import com.jecarm.calculator.util.Printer;
 
@@ -13,12 +15,12 @@ import java.util.stream.Collectors;
 
 
 public class Calculator {
-  private final List<String> commands = ImmutableList.of("+", "-", "*", "/", "sqrt", "undo", "clear");
 
-  RpnStack<String> dataStack = new RpnStack<>();
-  private List<String> inputList;
+  RpnStack<Numeral> dataStack = new RpnStack<>();
+  private List<Literal> inputLiterals;
   private Printer printer = new Printer();
   private CommandManager manager = new CommandManager();
+  private CommonParser parser = new CommonParser();
 
   public Calculator() {
 
@@ -29,26 +31,24 @@ public class Calculator {
   }
 
   public Calculator parseInputs(String inputs) {
-    this.inputList = Arrays.stream(inputs.split("\\s+"))
-      .map(String::trim)
-      .filter(s -> !s.isEmpty())
-      .collect(Collectors.toList());
+    this.inputLiterals = parser.parseCommand(inputs);
     return this;
   }
 
   public Calculator compute() {
-    for (String value : inputList) {
+    for (Literal value : inputLiterals) {
       if (!evaluate(value)) break;
     }
     printer.printConsole(getStackInfo());
     return this;
   }
 
-  public boolean evaluate(String value) {
-    if (isCommand(value)) {
-      Command cmd = parseCommand(value);
+  public boolean evaluate(Literal value) {
+    if (value instanceof StringLiteral) {
+      Command cmd = parseCommand(value.value().toString());
       if (dataStack.isEmpty() || !checkCommandValid(cmd)) {
-        printer.printConsole(String.format("operator %s insucient parameters", value));
+        printer.printConsole(String.format("operator %s (position: %d): insucient parameters",
+                value.value().toString(), ((StringLiteral) value).getPosition()));
         return false;
       }
       if (cmd instanceof Commands.Undo) {
@@ -56,8 +56,8 @@ public class Calculator {
       } else {
         manager.executeCommand(cmd);
       }
-    } else if (NumeralUtil.isNumeral(value)) {
-      Command numeralCommand = new NumeralCommand(dataStack, value);
+    } else if (value instanceof Numeral) {
+      Command numeralCommand = new NumeralCommand(dataStack, (Numeral)value);
       manager.executeCommand(numeralCommand);
     } else {
       printer.printConsole(String.format("Invalid parameters: %s", value));
@@ -102,9 +102,6 @@ public class Calculator {
     return dataStack.showString();
   }
 
-  private boolean isCommand(String value) {
-    return commands.contains(value.toLowerCase(Locale.ROOT));
-  }
 }
 
 

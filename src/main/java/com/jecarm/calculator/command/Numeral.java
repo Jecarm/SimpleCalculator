@@ -2,14 +2,8 @@ package com.jecarm.calculator.command;
 
 import com.jecarm.calculator.types.Type;
 
-public interface Numeral<T> {
+public interface Numeral<T> extends Literal<T> {
 
-  /**
-   * @return The value wrapped by this Numeral
-   */
-  T value();
-
-  Type dataType();
   /**
    * Converts this Numeral to a Numeral of the given type.
    *
