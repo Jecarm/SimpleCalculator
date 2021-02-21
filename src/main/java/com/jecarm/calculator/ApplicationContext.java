@@ -3,20 +3,25 @@ package com.jecarm.calculator;
 import java.util.*;
 
 /**
- * Hello world!
+ * Application Context
  */
-public class App {
+public class ApplicationContext {
 
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
     List<String> stopped = Arrays.asList("quit", "exit");
-    Calculator calculator = new Calculator();
+    Properties config = loadConfiguration();
+    Calculator calculator = new Calculator(config);
     while(true){
       String value = sc.nextLine();
       if (stopped.contains(value.trim())) break;
-      calculator.parseInputs(value);
-      calculator.compute();
+      calculator.parseInputs(value).compute();
     }
     sc.close();
+  }
+
+  private static Properties loadConfiguration() {
+    //TODO load properties
+    return new Properties();
   }
 }

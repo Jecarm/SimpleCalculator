@@ -1,17 +1,11 @@
 package com.jecarm.calculator;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import com.jecarm.calculator.command.*;
-import com.jecarm.calculator.common.CommonParser;
-import com.jecarm.calculator.common.Parser;
-import com.jecarm.calculator.util.NumeralUtil;
+import com.jecarm.calculator.common.GeneralParser;
 import com.jecarm.calculator.util.Printer;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.Properties;
 
 
 public class Calculator {
@@ -19,19 +13,18 @@ public class Calculator {
   RpnStack<Numeral> dataStack = new RpnStack<>();
   private List<Literal> inputLiterals;
   private Printer printer = new Printer();
-  private CommandManager manager = new CommandManager();
-  private CommonParser parser = new CommonParser();
+  private CommandManager manager;
+  private GeneralParser parser;
+  private Properties props;
 
-  public Calculator() {
-
-  }
-
-  public Calculator(String inputs) {
-    parseInputs(inputs);
+  public Calculator(Properties properties) {
+    this.props = properties;
+    manager = new CommandManager(properties);
+    parser = new GeneralParser(properties);
   }
 
   public Calculator parseInputs(String inputs) {
-    this.inputLiterals = parser.parseCommand(inputs);
+    this.inputLiterals = parser.parse(inputs);
     return this;
   }
 

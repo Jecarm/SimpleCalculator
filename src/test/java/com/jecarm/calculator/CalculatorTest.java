@@ -1,12 +1,22 @@
 package com.jecarm.calculator;
 
+import com.google.common.collect.ImmutableList;
+import com.jecarm.calculator.command.Literal;
 import com.jecarm.calculator.command.Numeral;
 
 import com.jecarm.calculator.command.Numerals;
+import com.jecarm.calculator.command.StringLiteral;
+import com.jecarm.calculator.common.GeneralParser;
+import com.jecarm.calculator.types.Types;
 import com.jecarm.calculator.util.NumeralUtil;
 import com.jecarm.calculator.util.TypeUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -14,7 +24,8 @@ public class CalculatorTest {
   Calculator calculator;
   @Before
   public void before() {
-    calculator = new Calculator();
+    Properties properties = new Properties();
+    calculator = new Calculator(properties);
   }
 
   @Test
@@ -93,5 +104,17 @@ public class CalculatorTest {
     assertTrue(NumeralUtil.isNumeral("0.1"));
     assertFalse(NumeralUtil.isNumeral("abc"));
     assertFalse(NumeralUtil.isNumeral("0...2"));
+  }
+
+  @Test
+  public void parserTest() {
+    GeneralParser parser = new GeneralParser(new Properties());
+    List<Literal> literals = parser.parse("1 2 3 *");
+    List<Literal> expected = ImmutableList.of(
+      Numerals.from(new BigDecimal(1)),
+      Numerals.from(new BigDecimal(2)),
+      Numerals.from(new BigDecimal(3)),
+      new StringLiteral("*", Types.StringType.get(), 7));
+    assertTrue(Objects.equals(literals, expected));
   }
 }

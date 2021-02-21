@@ -1,29 +1,30 @@
 package com.jecarm.calculator.common;
 
-import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.jecarm.calculator.command.*;
 import com.jecarm.calculator.types.Types;
 import com.jecarm.calculator.util.NumeralUtil;
 import com.jecarm.calculator.util.TypeUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
-public class CommonParser {
-  private final List<String> commands = ImmutableList.of("+", "-", "*", "/", "sqrt", "undo", "clear");
+public class GeneralParser {
+  private final List<String> COMMANDS = ImmutableList.of("+", "-", "*", "/", "sqrt", "undo", "clear");
 
   private List<Literal> inputLiterals;
+  private Properties props;
 
-  public CommonParser() {
+  public GeneralParser(Properties props) {
+    this.props = props;
   }
 
-  public List<Literal> parseCommand(String inputs) {
-    String[] inputStrings = inputs.split("\\s+");
+  public List<Literal> parse(String inputs) {
+    Objects.requireNonNull(inputs, "Inputs is null");
+    List<String> splits = Splitter.on(' ').splitToList(inputs);
     inputLiterals = new ArrayList<>();
-    for (int i = 0; i < inputStrings.length; i++) {
-      Literal literal = parseValue(inputStrings[i], i + 1);
+    for (int i = 0; i < splits.size(); i++) {
+      Literal literal = parseValue(splits.get(i), 2*i + 1);
       if (literal instanceof EmptyLiteral) continue;
       inputLiterals.add(literal);
     }
@@ -31,12 +32,12 @@ public class CommonParser {
     return inputLiterals;
   }
 
-  public List<Literal> getLiterals() {
+  public List<Literal> parsedValues() {
     return inputLiterals;
   }
 
   public Literal parseValue(String value, int position) throws IllegalArgumentException {
-    Preconditions.checkNotNull(value, "The value cannot be null");
+    Objects.requireNonNull(value, "The value cannot be null");
     if (value.isEmpty()) return new EmptyLiteral();
     else if (NumeralUtil.isNumeral(value)) {
       Numeral numeral;
@@ -54,11 +55,10 @@ public class CommonParser {
   }
 
   private boolean isScience() {
-    //TODO get from configuration
-    return true;
+    return Boolean.valueOf(props.getProperty("science.enable", "true"));
   }
 
   private boolean isCommand(String value) {
-    return commands.contains(value.toLowerCase(Locale.ROOT));
+    return COMMANDS.contains(value.toLowerCase(Locale.ROOT));
   }
 }
