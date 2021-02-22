@@ -117,4 +117,16 @@ public class CalculatorTest {
       new StringLiteral("*", Types.StringType.get(), 7));
     assertTrue(Objects.equals(literals, expected));
   }
+
+  @Test
+  public void parserRedundantWhiteSpaceTest() {
+    GeneralParser parser = new GeneralParser(new Properties());
+    List<Literal> literals = parser.parse(" 1 20  32  * ");
+    List<Literal> expected = ImmutableList.of(
+      Numerals.from(new BigDecimal(1)),
+      Numerals.from(new BigDecimal(20)),
+      Numerals.from(new BigDecimal(32)),
+      new StringLiteral("*", Types.StringType.get(), 12));
+    assertTrue(Objects.equals(literals, expected));
+  }
 }

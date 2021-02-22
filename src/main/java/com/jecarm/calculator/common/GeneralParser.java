@@ -1,6 +1,5 @@
 package com.jecarm.calculator.common;
 
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.jecarm.calculator.command.*;
 import com.jecarm.calculator.types.Types;
@@ -12,27 +11,34 @@ import java.util.*;
 public class GeneralParser {
   private final List<String> COMMANDS = ImmutableList.of("+", "-", "*", "/", "sqrt", "undo", "clear");
 
-  private List<Literal> inputLiterals;
   private Properties props;
 
   public GeneralParser(Properties props) {
     this.props = props;
   }
 
-  public List<Literal> parse(String inputs) {
-    Objects.requireNonNull(inputs, "Inputs is null");
-    List<String> splits = Splitter.on(' ').splitToList(inputs);
-    inputLiterals = new ArrayList<>();
-    for (int i = 0; i < splits.size(); i++) {
-      Literal literal = parseValue(splits.get(i), 2*i + 1);
-      if (literal instanceof EmptyLiteral) continue;
-      inputLiterals.add(literal);
+  public List<Literal> parse(String input) {
+    Objects.requireNonNull(input, "Inputs is null");
+    List<Literal> inputLiterals = new ArrayList<>();
+    int position = 0;
+    for (int i=0; i< input.length(); i++) {
+      if (input.charAt(i) == ' ') {
+        position++;
+      } else {
+        StringBuilder builder = new StringBuilder();
+        int firstPosition = position + 1;
+        while (i < input.length() && input.charAt(i) != ' ') {
+          builder.append(input.charAt(i));
+          i++;
+          position++;
+        }
+        String token = builder.toString();
+        Literal literal = parseValue(token, firstPosition);
+        inputLiterals.add(literal);
+        if (i >= input.length()) break;
+        i--;
+      }
     }
-
-    return inputLiterals;
-  }
-
-  public List<Literal> parsedValues() {
     return inputLiterals;
   }
 
