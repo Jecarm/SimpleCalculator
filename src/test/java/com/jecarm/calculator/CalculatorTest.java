@@ -129,4 +129,10 @@ public class CalculatorTest {
       new StringLiteral("*", Types.StringType.get(), 12));
     assertTrue(Objects.equals(literals, expected));
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void parseExceptionTest() {
+    GeneralParser parser = new GeneralParser(new Properties());
+    parser.parse("1 2 a +");
+  }
 }
