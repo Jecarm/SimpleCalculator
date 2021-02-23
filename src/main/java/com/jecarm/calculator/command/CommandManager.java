@@ -1,31 +1,38 @@
 package com.jecarm.calculator.command;
 
+import com.jecarm.calculator.RpnStack;
+
 import java.util.Properties;
-import java.util.Stack;
 
 public class CommandManager {
-  private final int MAX_STACK_SIZE = 10;
-  private Stack<Command> undoCommands = new Stack<>();
+  private final int DEFAULT_STACK_CAPACITY = 20;
+  private RpnStack<Command> undoCommands = new RpnStack<>();
   private Properties props;
+  private int capacity;
 
   public CommandManager(Properties props) {
     this.props = props;
+    this.capacity = Integer.parseInt(props.getProperty("undo.stack.capacity",
+        String.valueOf(DEFAULT_STACK_CAPACITY)));
   }
 
   public void executeCommand(Command cmd) {
     cmd.execute();
-    //TODO limit stack size
+    if (undoCommands.size() >= capacity) {
+      // evict the oldest command
+      undoCommands.pollOldestElement();
+    }
     undoCommands.push(cmd);
   }
 
   public void undo(){
-    if (!undoCommands.empty()) {
+    if (undoCommands.nonEmpty()) {
       Command cmd = undoCommands.pop();
       cmd.undo();
     }
   }
 
-  private int recoverStackSize() {
-    return Integer.parseInt(props.getOrDefault("undo.size", MAX_STACK_SIZE).toString());
+  public int currentSize() {
+    return undoCommands.size();
   }
 }

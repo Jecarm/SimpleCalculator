@@ -28,6 +28,11 @@ public class RpnStack<T> {
     storage.clear();
   }
 
+  // remove the oldest element
+  public T pollOldestElement() {
+    return storage.removeLast();
+  }
+
   public boolean isEmpty() {
     return storage.isEmpty();
   }
