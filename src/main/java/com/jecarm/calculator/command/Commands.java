@@ -7,12 +7,12 @@ import com.jecarm.calculator.util.TypeUtil;
 
 public class Commands {
 
-  public abstract static class BinaryCommand implements Command {
+  public abstract static class BinaryOperator implements Command {
     protected RpnStack<Numeral> dataStack;
     protected Numeral left;
     protected Numeral right;
 
-    public BinaryCommand(RpnStack<Numeral> dataStack) {
+    public BinaryOperator(RpnStack<Numeral> dataStack) {
       this.dataStack = dataStack;
     }
 
@@ -43,11 +43,11 @@ public class Commands {
 
   }
 
-  public abstract static class UnaryCommand implements Command {
+  public abstract static class UnaryOperator implements Command {
     protected RpnStack<Numeral> dataStack;
     protected Numeral value;
 
-    public UnaryCommand(RpnStack<Numeral> dataStack) {
+    public UnaryOperator(RpnStack<Numeral> dataStack) {
       this.dataStack = dataStack;
     }
 
@@ -76,9 +76,9 @@ public class Commands {
     }
   }
 
-  public static class AddCommand extends BinaryCommand {
+  public static class Plus extends BinaryOperator {
 
-    public AddCommand(RpnStack<Numeral> dataStack) {
+    public Plus(RpnStack<Numeral> dataStack) {
       super(dataStack);
     }
 
@@ -93,7 +93,7 @@ public class Commands {
     }
   }
 
-  public static class Subtract extends BinaryCommand {
+  public static class Subtract extends BinaryOperator {
 
     public Subtract(RpnStack<Numeral> dataStack) {
       super(dataStack);
@@ -110,7 +110,7 @@ public class Commands {
     }
   }
 
-  public static class Multiply extends BinaryCommand {
+  public static class Multiply extends BinaryOperator {
 
     public Multiply(RpnStack<Numeral> dataStack) {
       super(dataStack);
@@ -127,7 +127,7 @@ public class Commands {
     }
   }
 
-  public static class Divide extends BinaryCommand {
+  public static class Divide extends BinaryOperator {
 
     public Divide(RpnStack<Numeral> dataStack) {
       super(dataStack);
@@ -144,7 +144,7 @@ public class Commands {
     }
   }
 
-  public static class Sqrt extends UnaryCommand {
+  public static class Sqrt extends UnaryOperator {
 
     public Sqrt(RpnStack<Numeral> dataStack) {
       super(dataStack);
@@ -174,7 +174,7 @@ public class Commands {
 
     @Override
     public void undo() {
-      throw new OperationNotSupportException("Not support");
+      throw new OperationNotSupportException("Unsupported operation in Undo");
     }
 
     @Override
@@ -201,7 +201,7 @@ public class Commands {
 
     @Override
     public void undo() {
-      throw new OperationNotSupportException("Not support");
+      throw new OperationNotSupportException("Unsupported operation in Clear");
     }
 
     @Override

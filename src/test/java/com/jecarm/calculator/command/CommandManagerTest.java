@@ -33,7 +33,7 @@ public class CommandManagerTest {
 
     assertEquals(2, manager.currentSize());
 
-    Command plus = new Commands.AddCommand(dataStack);
+    Command plus = new Commands.Plus(dataStack);
     manager.executeCommand(plus);
     // stack info after execute plus
     assertEquals("stack:2 8", dataStack.showString());

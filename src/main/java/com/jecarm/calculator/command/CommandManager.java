@@ -17,12 +17,16 @@ public class CommandManager {
   }
 
   public void executeCommand(Command cmd) {
-    cmd.execute();
-    if (undoCommands.size() >= capacity) {
-      // evict the oldest command
-      undoCommands.pollOldestElement();
+    if (cmd instanceof Commands.Undo) {
+      undo();
+    } else {
+      cmd.execute();
+      if (undoCommands.size() >= capacity) {
+        // evict the oldest command
+        undoCommands.pollOldestElement();
+      }
+      undoCommands.push(cmd);
     }
-    undoCommands.push(cmd);
   }
 
   public void undo(){
