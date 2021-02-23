@@ -1,15 +1,23 @@
 package com.jecarm.calculator.common;
 
-import com.google.common.collect.ImmutableList;
-import com.jecarm.calculator.command.*;
+import com.google.common.collect.ImmutableSet;
+import com.jecarm.calculator.command.Literal;
+import com.jecarm.calculator.command.EmptyLiteral;
+import com.jecarm.calculator.command.Numeral;
+import com.jecarm.calculator.command.StringLiteral;
 import com.jecarm.calculator.types.Types;
 import com.jecarm.calculator.util.NumeralUtil;
 import com.jecarm.calculator.util.TypeUtil;
 
-import java.util.*;
+import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Locale;
+import java.util.Properties;
 
 public class GeneralParser {
-  private final List<String> COMMANDS = ImmutableList.of("+", "-", "*", "/", "sqrt", "undo", "clear");
+  private final Set<String> COMMANDS = ImmutableSet.of("+", "-", "*", "/", "sqrt", "undo", "clear");
 
   private Properties props;
 
