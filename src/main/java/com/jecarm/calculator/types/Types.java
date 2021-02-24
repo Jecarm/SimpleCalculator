@@ -3,7 +3,6 @@ package com.jecarm.calculator.types;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
-import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -30,16 +29,12 @@ public class Types {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj instanceof BaseType) {
-        return this.toString() == obj.toString();
-      }
-      return false;
+      return this == obj;
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(this.toString());
+      return getClass().hashCode();
     }
   }
 
@@ -175,15 +170,12 @@ public class Types {
     public boolean equals(Object o) {
       if (this == o) {
         return true;
-      } else if (!(o instanceof DecimalType)) {
+      }
+      if (o ==null || getClass() != o.getClass()) {
         return false;
       }
-
       DecimalType that = (DecimalType) o;
-      if (scale != that.scale) {
-        return false;
-      }
-      return precision == that.precision;
+      return scale == that.scale && precision == that.precision;
     }
 
     @Override

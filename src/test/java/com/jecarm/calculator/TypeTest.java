@@ -1,9 +1,13 @@
 package com.jecarm.calculator;
 
+import com.google.common.collect.ImmutableList;
+import com.jecarm.calculator.command.Literal;
+import com.jecarm.calculator.command.Numerals;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -24,5 +28,15 @@ public class TypeTest {
 
     BigDecimal d2 = decimal.divide(new BigDecimal("2"), 15, RoundingMode.UNNECESSARY);
     assertEquals("11.000000000000000", d2.toString());
+  }
+
+  @Test
+  public void numeralTypeEqualsTest() {
+      assertEquals(Numerals.from(1), Numerals.from(1));
+      assertNotEquals(Numerals.from(1), Numerals.from(1L));
+      assertEquals(Numerals.from(1L), Numerals.from(1L));
+      assertEquals(Numerals.from(1.1f), Numerals.from(1.1f));
+      assertEquals(Numerals.from(1.000), Numerals.from(1.000));
+      assertEquals(Numerals.from(new BigDecimal(15)), Numerals.from(new BigDecimal(15)));
   }
 }

@@ -14,22 +14,22 @@ public interface Numeral<T> extends Literal<T> {
   <X> Numeral<X> to(Type type);
 
   default Numeral<T> plus(Numeral<T> value) {
-    throw new RuntimeException("Operation not support.");
+    throw new UnsupportedOperationException("Unsupported operation in " + getClass().getName());
   }
 
   default Numeral<T> minus(Numeral<T> value) {
-    throw new RuntimeException("Operation not support.");
+    throw new UnsupportedOperationException("Unsupported operation in " + getClass().getName());
   }
 
   default Numeral<T> multiply(Numeral<T> value) {
-    throw new RuntimeException("Operation not support.");
+    throw new UnsupportedOperationException("Unsupported operation in " + getClass().getName());
   }
 
   default Numeral<T> divide(Numeral<T> value) {
-    throw new RuntimeException("Operation not support.");
+    throw new UnsupportedOperationException("Unsupported operation in " + getClass().getName());
   }
 
   default Numeral sqrt() {
-    throw new RuntimeException("Operation not support.");
+    throw new UnsupportedOperationException("Unsupported operation in " + getClass().getName());
   }
 }

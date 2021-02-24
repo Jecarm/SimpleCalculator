@@ -34,8 +34,6 @@ public class Numerals {
       return (Numeral<T>) new Numerals.FloatNumeral((Float) value);
     } else if (value instanceof Double) {
       return (Numeral<T>) new Numerals.DoubleNumeral((Double) value);
-    } else if (value instanceof CharSequence) {
-      return (Numeral<T>) new Numerals.StringNumeral((CharSequence) value);
     } else if (value instanceof BigInteger) {
       return (Numeral<T>) new Numerals.BigIntegerNumeral((BigInteger) value);
     } else if (value instanceof BigDecimal) {
@@ -82,12 +80,12 @@ public class Numerals {
       }
       BaseNumeral<T> that = (BaseNumeral<T>) other;
 
-      return value.equals(that.value);
+      return Objects.equals(value, that.value) && Objects.equals(dataType, that.dataType);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(value);
+      return Objects.hash(value);
     }
   }
 
@@ -327,22 +325,6 @@ public class Numerals {
     }
   }
 
-  public static class StringNumeral extends BaseNumeral<CharSequence> {
-    public StringNumeral(CharSequence value) {
-      super(value, null);
-    }
-
-    @Override
-    public <T> Numeral<T> to(Type type) {
-      switch (type.typeId()) {
-        case STRING:
-          return (Numeral<T>) this;
-        default:
-          return null;
-      }
-    }
-  }
-
   public static class DecimalNumeral extends BaseNumeral<BigDecimal> {
     public DecimalNumeral(BigDecimal value) {
       super(value, Types.DecimalType.of(15, 10));
@@ -416,7 +398,6 @@ public class Numerals {
     public <T> Numeral<T> to(Type type) {
       switch (type.typeId()) {
         case BIG_INTEGER:
-          // do not change decimal scale
           return (Numeral<T>) this;
         default:
           return null;
